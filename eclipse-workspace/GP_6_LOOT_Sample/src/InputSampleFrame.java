@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.TextField;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -56,14 +57,14 @@ public class InputSampleFrame extends GameFrame {
 			width = 80;
 			height = 80;
 			if( level == 3 ) {
-				score = 500;
-				image = images.GetImage("player_normal");
+				score = 3;
+				image = images.GetImage("couple3");
 			} else if( level == 2) {
-				score = 100;
-				image = images.GetImage("player_normal");
+				score = 2;
+				image = images.GetImage("couple2");
 			} else {
-				score = 50;
-				image = images.GetImage("player_normal");
+				score = 1;
+				image = images.GetImage("couple1");
 			}
 		}
 	}
@@ -85,14 +86,17 @@ public class InputSampleFrame extends GameFrame {
 	}
 
 	class Player extends DrawableObject {
+		public String name;
 		public PlayerState state;
 		public int score;
 		public int[] item;
+		public boolean freeze;
 		
 		public Player(boolean isPlayer1) {
 			state = PlayerState.Stop;
 			score = 0;
 			item = new int[3];
+			freeze=false;
 				
 			if ( isPlayer1 == true ) {
 				x = 350;
@@ -183,6 +187,15 @@ public class InputSampleFrame extends GameFrame {
 		images.LoadImage("Images/lifebar_green.png", "lifebar_green");
 		images.LoadImage("Images/lifebar_red.png", "lifebar_red");
 		
+		images.LoadImage("Images/couple1.png", "couple1");
+		images.LoadImage("Images/couple2.png", "couple2");
+		images.LoadImage("Images/couple3.png", "couple3");
+		images.LoadImage("Images/solo1.png", "solo1");
+		images.LoadImage("Images/solo2.png", "solo2");
+		images.LoadImage("Images/solo3.png", "solo3");
+		
+		images.LoadImage("Images/background.png", "bg_game");
+		
 		images.CreateTempImage(Color.BLACK, "bg_base");
 		images.CreateTempImage(Color.YELLOW, "bg_ex");
 		images.CreateTempImage(Color.RED, "bg_naming");
@@ -210,11 +223,13 @@ public class InputSampleFrame extends GameFrame {
 		DrawableObject bt_back = new DrawableObject(1050, 650, 200, 100, images.GetImage("back"));
 		DrawableObject bt_chkrank = new DrawableObject(950, 600, 200, 100, images.GetImage("chkrank"));
 		DrawableObject bt_gamerole = new DrawableObject(600, 600, 200, 100, images.GetImage("gamerole"));
-		DrawableObject bt_start = new DrawableObject(250, 600, 200, 100, images.GetImage("start"));		
+		DrawableObject bt_start1 = new DrawableObject(250, 600, 200, 100, images.GetImage("start"));		
+		DrawableObject bt_start2 = new DrawableObject(600, 600, 200, 100, images.GetImage("start"));
+
 		
 		DrawableObject bg_base = new DrawableObject(0, 0, settings.canvas_width, settings.canvas_height, images.GetImage("bg_base"));
 		viewports[0] = new Viewport(0, 0, settings.canvas_width, settings.canvas_height);
-		viewports[0].children.add(bt_start);
+		viewports[0].children.add(bt_start1);
 		viewports[0].children.add(bt_chkrank);
 		viewports[0].children.add(bt_gamerole);
 		viewports[0].children.add(bg_base);
@@ -224,10 +239,10 @@ public class InputSampleFrame extends GameFrame {
 		viewports[1].children.add(bt_back);
 		viewports[1].children.add(bg_ex);
 		
-		bt_start = new DrawableObject(600, 600, 200, 100, images.GetImage("start"));
+		
 		DrawableObject bg_naming = new DrawableObject(0, 0, settings.canvas_width, settings.canvas_height, images.GetImage("bg_naming"));
 		viewports[2] = new Viewport(0, 0, settings.canvas_width, settings.canvas_height);
-		viewports[2].children.add(bt_start);
+		viewports[2].children.add(bt_start2);
 		viewports[2].children.add(bt_back);
 		viewports[2].children.add(bg_naming);
 		
@@ -258,6 +273,7 @@ public class InputSampleFrame extends GameFrame {
 			if( inputs.buttons[5].IsReleasedNow() == true ) {
 				if(inputs.pos_mouseCursor.getX()>=250&&inputs.pos_mouseCursor.getX()<=450&&inputs.pos_mouseCursor.getY()>=600&&inputs.pos_mouseCursor.getY()<=700) {
 					state = GameState.Naming;
+
 				}
 				
 				if(inputs.pos_mouseCursor.getX()>=600&&inputs.pos_mouseCursor.getX()<=800&&inputs.pos_mouseCursor.getY()>=600&&inputs.pos_mouseCursor.getY()<=700) {
@@ -427,6 +443,7 @@ public class InputSampleFrame extends GameFrame {
 		case Ready:
 			break;
 		case Running:
+			viewports[5].Draw(g);
 			DrawString(10, 50, "½ºÄÚ¾î %d               ", p1.score);
 			for(int i=couplestart;i<coupleend;i++) {
 				if(couples[i]!=null) couples[i].Draw(g);
